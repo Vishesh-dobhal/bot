@@ -3,462 +3,334 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Seva Setu - Mobile Responsive</title>
-    <!-- Tailwind + Fonts + Icons -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seva Setu · fixed toggle & inline icons</title>
+
+    <!-- tailwind + font awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
-<style>
-    *{
-    font-family:'Inter',sans-serif;
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
 
-body{
-    background:#ffffff;
-    min-height:100vh;
-    overflow-x:hidden;
-}
+    <style>
+        body {
+            background: #fff;
+            font-family: Inter, sans-serif;
+            overflow-x: hidden;
+        }
 
-/* Floating icon */
-.floating-icon{
-    animation:float 3s ease-in-out infinite;
-    box-shadow:0 10px 25px rgba(249,115,22,0.4);
-}
+        /* floating button — image becomes cross when chat opens */
+        .floating-icon {
+            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 10px 25px rgba(249, 115, 22, .4);
+            transition: background 0.2s, border-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
 
-@keyframes float{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-8px)}
-}
+        .floating-icon img,
+        .floating-icon i {
+            transition: opacity 0.2s, transform 0.2s;
+        }
 
-/* CHATBOT CONTAINER */
+        .floating-icon .btn-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
 
-.chatbot-container{
-    transition:all .3s cubic-bezier(.4,0,.2,1);
-    position:fixed;
-    z-index:40;
-    bottom:6rem;
-    right:1.5rem;
-    width:100%;
-    max-width:28rem;
-    opacity:0;
-    transform:scale(.5) translateY(20px);
-    visibility:hidden;
-    height:0;
-    overflow:hidden;
-}
+        .floating-icon .btn-cross {
+            font-size: 2rem;
+            color: #f97316;
+            display: none;
+        }
 
-.chatbot-container.active{
-    opacity:1;
-    transform:scale(1) translateY(0);
-    visibility:visible;
-    height:90vh;
-    max-height:90vh;
-}
+        /* when chat is active, hide image and show cross */
+        .floating-icon.active-chat .btn-image {
+            display: none;
+        }
 
-/* MAIN CHAT CONTAINER */
+        .floating-icon.active-chat .btn-cross {
+            display: inline-block;
+        }
 
-.chat-container{
-    height:100%;
-    border-radius:1.5rem;
-    box-shadow:0 25px 50px -12px rgba(0,0,0,.3);
-    overflow:hidden;
-    border:1px solid #e5e7eb;
-    display:flex;
-    flex-direction:column;
-    position:relative;
-    background:#f8f4f0;
-}
+        @keyframes float {
 
-/* BACKGROUND IMAGE */
+            0%,
+            100% {
+                transform: translateY(0);
+            }
 
-.lady-background{
-    position:absolute;
-    inset:0;
-    z-index:0;
-    overflow:hidden;
-}
+            50% {
+                transform: translateY(-8px);
+            }
+        }
 
-.lady-background img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:center 15%;
-}
+        /* chatbot container */
+        .chatbot-container {
+            transition: .3s;
+            position: fixed;
+            z-index: 40;
+            bottom: 6rem;
+            right: 1.5rem;
+            width: 100%;
+            max-width: 28rem;
+            opacity: 0;
+            transform: scale(.5);
+            visibility: hidden;
+            height: 0;
+            overflow: hidden;
+        }
 
-.lady-background::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.3));
-}
+        .chatbot-container.active {
+            opacity: 1;
+            transform: scale(1);
+            visibility: visible;
+            height: 90vh;
+        }
 
-.chat-container>*:not(.lady-background){
-    position:relative;
-    z-index:2;
-}
+        /* main chat */
+        .chat-container {
+            height: 100%;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .3);
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            background: #f8f4f0;
+            position: relative;
+        }
 
-/* HEADER */
+        /* background image */
+        .lady-background {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
 
-.mobile-header{
-    background:linear-gradient(135deg,rgba(249,115,22,.95),rgba(251,146,60,.95));
-    backdrop-filter:blur(3px);
-}
+        .lady-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+        }
 
-/* MESSAGE AREA */
+        .lady-background::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, .1), rgba(0, 0, 0, .3));
+        }
 
-.messages-container{
-    flex:1 1 auto;
-    min-height:0;
-    overflow-y:auto;
-    padding:1rem;
-    background:transparent;
-}
+        .chat-container>*:not(.lady-background) {
+            position: relative;
+            z-index: 2;
+        }
 
-/* SCROLLBAR */
+        /* header */
+        .mobile-header {
+            background: linear-gradient(135deg, rgba(249, 115, 22, .95), rgba(251, 146, 60, .95));
+        }
 
-.messages-container::-webkit-scrollbar{
-    width:4px;
-}
+        /* messages */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
 
-.messages-container::-webkit-scrollbar-thumb{
-    background:#f97316;
-    border-radius:10px;
-}
+        #chat-messages {
+            margin-top: auto;
+        }
 
-/* MESSAGE BUBBLES */
+        /* bubbles */
+        .message-bot .bg-white {
+            background: rgba(255, 255, 255, .75);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, .6);
+        }
 
-.message-bot .bg-white,
-.advisory-card{
-    background:rgba(255,255,255,.75);
-    backdrop-filter:blur(4px);
-    border:1px solid rgba(255,255,255,.6);
-    box-shadow:0 4px 6px rgba(0,0,0,.1);
-}
+        .message-user .bg-orange-500 {
+            background: rgba(249, 115, 22, 0.9);
+        }
 
-.message-user .bg-gradient-to-r{
-    background:rgba(249,115,22,.9);
-}
+        /* typing */
+        .typing-indicator span {
+            animation: bounce 1.4s infinite;
+            width: 8px;
+            height: 8px;
+            background: #f97316;
+            border-radius: 50%;
+            display: inline-block;
+        }
 
-/* INPUT AREA */
+        .typing-indicator span:nth-child(2) {
+            animation-delay: .2s;
+        }
 
-.sticky-bottom-area{
-    position:sticky;
-    bottom:0;
-    width:100%;
-    z-index:10;
-}
+        .typing-indicator span:nth-child(3) {
+            animation-delay: .4s;
+        }
 
-.input-sticky-wrapper{
-    background:rgba(255,255,255,.95);
-    backdrop-filter:blur(10px);
-    border-top:1px solid rgba(226,232,240,.8);
-    padding:.75rem 1rem;
-    padding-bottom:calc(env(safe-area-inset-bottom) + 12px);
-}
+        @keyframes bounce {
 
-/* SUGGESTIONS */
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
 
-.suggestions-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:.5rem;
-    margin-bottom:.75rem;
-}
+            30% {
+                transform: translateY(-8px);
+            }
+        }
 
-/* MESSAGE ANIMATION */
+        /* input row — icons inside the field */
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0 0.5rem;
+            flex: 1;
+        }
 
-.message-bot,
-.message-user{
-    animation:slide .3s ease;
-}
+        .input-wrapper input {
+            border: none;
+            outline: none;
+            padding: 0.75rem 0.5rem;
+            width: 100%;
+            background: transparent;
+        }
 
-@keyframes slide{
-from{opacity:0;transform:translateX(10px)}
-to{opacity:1;transform:translateX(0)}
-}
+        .input-wrapper .input-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 0.25rem;
+            flex-shrink: 0;
+        }
 
-/* TYPING */
+        .input-wrapper .input-actions button i {
+            color: #9ca3af;
+            font-size: 1.1rem;
+            transition: color 0.2s;
+        }
 
-.typing-indicator span{
-    animation:bounce 1.4s infinite;
-    width:8px;
-    height:8px;
-    background:#f97316;
-    border-radius:50%;
-    display:inline-block;
-}
+        .input-wrapper .input-actions button:hover i {
+            color: #f97316;
+        }
 
-.typing-indicator span:nth-child(2){
-animation-delay:.2s
-}
-
-.typing-indicator span:nth-child(3){
-animation-delay:.4s
-}
-
-@keyframes bounce{
-0%,60%,100%{transform:translateY(0)}
-30%{transform:translateY(-8px)}
-}
-
-/* TOOLTIP */
-
-#chat-tooltip{
-transition:opacity .2s
-}
-
-/* =========================
-MOBILE FIX (IMPORTANT)
-========================= */
-
-@media(max-width:768px){
-
-.chatbot-container.active{
-position:fixed;
-top:0;
-left:0;
-right:0;
-bottom:0;
-width:100vw;
-height:100dvh;
-max-width:100vw;
-max-height:100dvh;
-border-radius:0;
-}
-
-.chat-container{
-height:100dvh;
-width:100vw;
-border-radius:0;
-display:flex;
-flex-direction:column;
-}
-
-.mobile-header{
-flex:0 0 auto;
-}
-
-.messages-container{
-flex:1 1 auto;
-min-height:0;
-overflow-y:auto;
-padding:1rem;
-}
-
-.sticky-bottom-area{
-position:sticky;
-bottom:0;
-width:100%;
-z-index:20;
-}
-
-.input-sticky-wrapper{
-padding:.75rem 1rem;
-padding-bottom:calc(env(safe-area-inset-bottom) + 16px);
-}
-
-.lady-background img{
-object-position:center 20%;
-}
-
-.message-bot,
-.message-user{
-max-width:100%;
-}
-
-.message-bot .bg-white\/80,
-.advisory-card{
-max-width:calc(100vw - 5rem);
-}
-
-}
-</style>
+        /* send button stays outside, but visually attached */
+        .send-btn-container {
+            flex-shrink: 0;
+        }
+    </style>
 </head>
 
-<body class="bg-white">
-    <!-- Empty background -->
-    <div class="min-h-screen"></div>
+<body>
 
-    <!-- Floating Chat Icon -->
-    <div id="chat-icon" class="fixed bottom-6 right-6 z-50">
-        <div class="relative">
-            <div id="notification-badge"
-                class="hidden absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                1</div>
-            <button id="toggle-chat"
-                class="floating-icon w-16 h-16 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center text-white shadow-2xl hover:shadow-xl">
-                <i class="fas fa-comments text-2xl"></i>
-            </button>
-            <div id="chat-tooltip"
-                class="absolute bottom-full right-0 mb-3 bg-gray-900 text-white text-sm rounded-lg py-2 px-3 opacity-0 invisible">
-                Chat with Seva Setu
-                <div
-                    class="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-900">
-                </div>
-            </div>
-        </div>
+    <!-- FLOATING BUTTON : image by default, cross when active -->
+    <div class="fixed bottom-6 right-6 z-50">
+        <button id="toggle-chat"
+            class="floating-icon w-16 h-16 rounded-full overflow-hidden border-4 border-orange-500 flex items-center justify-center bg-white">
+            <img src="./image/image1.png" class="btn-image w-full h-full object-cover">
+            <i class="fas fa-times btn-cross text-4xl"></i>
+        </button>
     </div>
 
-    <!-- Chatbot Container -->
+    <!-- CHATBOT CONTAINER -->
     <div id="chatbot-container" class="chatbot-container">
-        <!-- Main Container -->
         <div class="chat-container">
-            <!-- LADY IMAGE -->
             <div class="lady-background">
-                <img src="./image/image1.png" alt="Lady Portrait"
-                    style="width:100%; height:100%; object-fit:cover; object-position: center 20%;">
+                <img src="./image/image1.png" alt="">
             </div>
 
-            <!-- Header -->
-            <div class="bg-gradient-to-r from-orange-500 to-orange-400 text-white mobile-header">
+            <!-- HEADER -->
+            <div class="mobile-header text-white">
                 <div class="flex items-center justify-between p-4">
-                    <div class="flex items-center flex-1 justify-center">
-                        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mr-3"><i
-                                class="fas fa-robot text-xl"></i></div>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-robot"></i>
+                        </div>
                         <div>
-                            <h2 class="text-xl font-bold">Seva Setu Automated Assistant</h2>
-                            <p class="text-orange-100 text-xs">Assistant • Consulate Info</p>
+                            <h2 class="font-bold">Seva Setu Assistant</h2>
+                            <p class="text-xs">Consulate Info</p>
                         </div>
                     </div>
-                    <button id="minimize-chat" class="p-2 rounded-lg hover:bg-white/10 transition-colors"><i
-                            class="fas fa-times text-xl"></i></button>
+                    <button id="minimize-chat">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             </div>
 
-            <!-- Messages Area -->
-            <div class="messages-container overflow-y-auto" id="messages-scroll">
-                <div class="space-y-4" id="chat-messages">
-                    <!-- Advisory Message -->
-                    <div class="message-bot flex items-start advisory-message">
-                        <div
-                            class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3 flex-shrink-0 mt-1">
+            <!-- MESSAGES -->
+            <div class="messages-container" id="messages-scroll">
+                <div id="chat-messages" class="space-y-4"></div>
+                <div id="bottom-messages" class="space-y-4">
+                    <!-- welcome bot -->
+                    <div class="message-bot flex items-start">
+                        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center mr-3">
                             <i class="fas fa-robot text-white"></i>
                         </div>
-                        <div class="flex-1">
-                            <div class="advisory-card">
-                                <div
-                                    class="advisory-header bg-gradient-to-r from-orange-500 to-orange-400 p-5 text-white rounded-t-xl">
-                                    <h2 class="text-xl font-bold">Important Advisory from the<br>Consulate General of
-                                        India, Johannesburg</h2>
-                                </div>
-                                <div class="advisory-body p-5">
-                                    <div
-                                        class="important-note bg-orange-50 border-l-4 border-orange-500 p-4 rounded-lg mb-5">
-                                        <p class="flex items-start gap-2"><i class="fas fa-shield-alt text-xl mt-1"></i>
-                                            The Consulate does not make phone calls demanding money for fines,
-                                            penalties, or any other reason.</p>
-                                    </div>
-                                    <div class="font-bold text-lg text-gray-800 mb-3">Do not engage with such callers
-                                        under any circumstance.</div>
-                                    <div class="bullet-list space-y-2">
-                                        <div class="bullet-item flex gap-2"><i
-                                                class="fas fa-circle text-xs text-orange-500 mt-1"></i> Do not share any
-                                            personal or financial information.</div>
-                                        <div class="bullet-item flex gap-2"><i
-                                                class="fas fa-circle text-xs text-orange-500 mt-1"></i> If you receive a
-                                            suspicious call, note the caller's number.</div>
-                                        <div class="bullet-item flex gap-2"><i
-                                                class="fas fa-circle text-xs text-orange-500 mt-1"></i> Report it
-                                            immediately to your local police station.</div>
-                                    </div>
-                                    <div class="be-safe text-orange-600 font-bold text-xl my-4">Be vigilant. Stay safe.
-                                    </div>
-                                    <div
-                                        class="team-banner bg-amber-50 p-4 rounded-xl flex flex-wrap items-center justify-between">
-                                        <div class="team-left flex items-center gap-2"><span>🇮🇳</span>
-                                            <h3 class="font-bold">Team Bharat in South Africa Welcomes you</h3>
-                                        </div>
-                                        <div
-                                            class="assist-badge bg-orange-500 text-white px-4 py-2 rounded-full flex items-center gap-1">
-                                            <i class="fas fa-handshake"></i> Namaste
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-xs text-gray-400 mt-1 ml-1">Just now</div>
+                        <div class="bg-white rounded-2xl p-4 max-w-xs">
+                            <p>Welcome! How can I assist you today?</p>
                         </div>
                     </div>
-
-                    <!-- Quick options -->
+                    <!-- quick options -->
                     <div class="message-bot flex items-start">
-                        <div
-                            class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3 flex-shrink-0">
+                        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center mr-3">
                             <i class="fas fa-robot text-white"></i>
                         </div>
-                        <div
-                            class="bg-white/80 backdrop-blur-sm rounded-2xl rounded-tl-none p-4 max-w-xs shadow-sm border border-gray-100">
-                            <p class="text-gray-800 mb-3">Ask me about:</p>
-                            <div class="flex flex-wrap gap-2">
-                                <button
-                                    class="quick-option-btn px-3 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg text-sm"
-                                    data-option="visa">Visa Services</button>
-                                <button
-                                    class="quick-option-btn px-3 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg text-sm"
-                                    data-option="passport">Passport</button>
-                                <button
-                                    class="quick-option-btn px-3 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg text-sm"
-                                    data-option="consulate">Consulate Help</button>
+                        <div class="bg-white rounded-2xl p-4 max-w-xs">
+                            <p class="mb-2">Ask me about:</p>
+                            <div class="flex gap-2 flex-wrap">
+                                <button class="quick-option-btn px-3 py-1 bg-orange-100 rounded"
+                                    data-option="Visa Services">Visa Services</button>
+                                <button class="quick-option-btn px-3 py-1 bg-orange-100 rounded"
+                                    data-option="Passport">Passport</button>
+                                <button class="quick-option-btn px-3 py-1 bg-orange-100 rounded"
+                                    data-option="Consulate Help">Consulate Help</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Typing indicator -->
+                <!-- typing indicator -->
                 <div id="typing-indicator" class="hidden mt-4">
                     <div class="flex items-start">
-                        <div
-                            class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3">
+                        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center mr-3">
                             <i class="fas fa-robot text-white"></i>
                         </div>
-                        <div class="bg-white/80 rounded-2xl rounded-tl-none p-4 shadow-sm border border-gray-100">
-                            <div class="typing-indicator flex space-x-1"><span></span><span></span><span></span></div>
-                            <p class="text-xs text-gray-500 mt-1">Assistant is typing...</p>
+                        <div class="bg-white p-4 rounded-xl">
+                            <div class="typing-indicator flex space-x-1">
+                                <span></span><span></span><span></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Bottom Input Area -->
-            <div class="sticky-bottom-area w-full">
-                <div class="input-sticky-wrapper">
-                    <!-- Quick suggestion chips -->
-                    <div class="suggestions-row">
-                        <button
-                            class="quick-suggestion-btn px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-xs"
-                            data-suggestion="Visa application status">Visa Status</button>
-                        <button
-                            class="quick-suggestion-btn px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-xs"
-                            data-suggestion="Passport renewal">Passport Renewal</button>
-                        <button
-                            class="quick-suggestion-btn px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg text-xs"
-                            data-suggestion="Emergency contact">Emergency</button>
-                    </div>
-
-                    <!-- Input row -->
-                    <div class="flex items-center gap-2">
-                        <button id="voice-btn"
-                            class="bg-gradient-to-r from-orange-500 to-orange-400 text-white p-3 rounded-xl hover:from-orange-600 hover:to-orange-500 transition shadow-md flex-shrink-0"><i
-                                class="fas fa-microphone"></i></button>
-                        <div class="flex-1 relative">
-                            <input type="text" id="message-input" placeholder="Ask about consulate services..."
-                                class="w-full p-3 pr-12 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white/90">
-                            <div
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
-                                <button class="text-gray-400 hover:text-gray-600" id="camera-btn"><i
-                                        class="fas fa-camera"></i></button>
-                                <button class="text-gray-400 hover:text-gray-600" id="attach-btn"><i
-                                        class="fas fa-paperclip"></i></button>
-                                <button class="text-gray-400 hover:text-gray-600" id="emoji-btn"><i
-                                        class="far fa-smile"></i></button>
-                            </div>
+            <!-- INPUT AREA : camera / paperclip / mic INSIDE input field -->
+            <div class="p-3 border-t bg-white">
+                <div class="flex items-center gap-2">
+                    <!-- wrapper that contains input + icons inside -->
+                    <div class="input-wrapper">
+                        <input id="message-input" type="text" placeholder="Ask about consulate services">
+                        <div class="input-actions">
+                            <button id="camera-btn"><i class="fas fa-camera"></i></button>
+                            <button id="attach-btn"><i class="fas fa-paperclip"></i></button>
+                            <button id="audio-btn"><i class="fas fa-microphone"></i></button>
                         </div>
-                        <button id="send-btn"
-                            class="bg-gradient-to-r from-orange-500 to-orange-400 text-white p-3 rounded-xl hover:from-orange-600 hover:to-orange-500 transition shadow-md flex-shrink-0"><i
-                                class="fas fa-paper-plane"></i></button>
+                    </div>
+                    <!-- send button remains separate -->
+                    <div class="send-btn-container">
+                        <button id="send-btn" class="bg-orange-500 text-white p-3 rounded-lg">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -467,137 +339,135 @@ max-width:calc(100vw - 5rem);
 
     <script>
         (function () {
-            const toggleChat = document.getElementById('toggle-chat');
-            const chatbot = document.getElementById('chatbot-container');
-            const minimize = document.getElementById('minimize-chat');
-            const notification = document.getElementById('notification-badge');
-            const tooltip = document.getElementById('chat-tooltip');
-            const messageInput = document.getElementById('message-input');
-            const sendBtn = document.getElementById('send-btn');
-            const chatMessages = document.getElementById('chat-messages');
-            const typingIndicator = document.getElementById('typing-indicator');
+            const toggleChat = document.getElementById("toggle-chat");
+            const chatbot = document.getElementById("chatbot-container");
+            const minimize = document.getElementById("minimize-chat");
+            const messageInput = document.getElementById("message-input");
+            const sendBtn = document.getElementById("send-btn");
+            const chatMessages = document.getElementById("chat-messages");
+            const typingIndicator = document.getElementById("typing-indicator");
+            const bottomMessages = document.getElementById("bottom-messages");
+
+            // camera/attach/audio buttons — just demo alerts
+            document.getElementById("camera-btn")?.addEventListener("click", (e) => {
+                e.preventDefault();
+                alert("📸 Camera opened (simulated)");
+            });
+            document.getElementById("attach-btn")?.addEventListener("click", (e) => {
+                e.preventDefault();
+                alert("📎 Attach file (simulated)");
+            });
+            document.getElementById("audio-btn")?.addEventListener("click", (e) => {
+                e.preventDefault();
+                alert("🎤 Voice recording will start");
+            });
 
             let isOpen = false;
+            let firstMessageSent = false;  // tracks if we moved bottom messages
 
-            // Tooltip
-            if (toggleChat) {
-                toggleChat.addEventListener('mouseenter', () => {
-                    tooltip?.classList.remove('opacity-0', 'invisible');
-                    tooltip?.classList.add('opacity-100', 'visible');
-                });
-                toggleChat.addEventListener('mouseleave', () => {
-                    tooltip?.classList.add('opacity-0', 'invisible');
-                    tooltip?.classList.remove('opacity-100', 'visible');
-                });
+            // toggle chat + switch icon image/cross
+            function toggleChatPanel() {
+                isOpen = !isOpen;
+                chatbot.classList.toggle("active", isOpen);
+                toggleChat.classList.toggle("active-chat", isOpen); // controls image/cross
             }
 
-            function openChat() {
-                chatbot.classList.add('active');
-                isOpen = true;
-                toggleChat.innerHTML = '<i class="fas fa-times text-2xl"></i>';
-                notification.classList.add('hidden');
-                messageInput?.focus();
-                document.body.style.overflow = 'hidden';
-                setTimeout(scrollToBottom, 100);
-            }
+            toggleChat.onclick = (e) => {
+                e.preventDefault();
+                toggleChatPanel();
+            };
 
-            function closeChat() {
-                chatbot.classList.remove('active');
+            minimize.onclick = () => {
                 isOpen = false;
-                toggleChat.innerHTML = '<i class="fas fa-comments text-2xl"></i>';
-                document.body.style.overflow = '';
+                chatbot.classList.remove("active");
+                toggleChat.classList.remove("active-chat");
+            };
+
+            // scroll to bottom
+            function scrollBottom() {
+                const scroll = document.getElementById("messages-scroll");
+                scroll.scrollTop = scroll.scrollHeight;
             }
 
-            function scrollToBottom() {
-                const container = document.getElementById('messages-scroll');
-                if (container) {
-                    container.scrollTop = container.scrollHeight;
-                }
-            }
+            // add message (user = true for outgoing)
+            function addMessage(text, user) {
+                const div = document.createElement("div");
+                div.className = `flex items-start ${user ? 'justify-end' : ''}`;
 
-            toggleChat?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                isOpen ? closeChat() : openChat();
-            });
-
-            minimize?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                closeChat();
-            });
-
-            // Send message
-            function addMessage(text, isUser) {
-                const div = document.createElement('div');
-                div.className = `flex items-start ${isUser ? 'justify-end message-user' : 'message-bot'}`;
-                const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-                if (isUser) {
-                    div.innerHTML = `<div class="bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-2xl rounded-tr-none p-4 max-w-xs shadow-md"><p>${text}</p><div class="text-xs text-orange-100 mt-2 text-right">${time}</div></div><div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center ml-3 flex-shrink-0"><i class="fas fa-user text-white"></i></div>`;
+                if (user) {
+                    // user message bubble (right side)
+                    div.innerHTML = `<div class="bg-orange-500 text-white rounded-2xl p-4 max-w-xs">${text}</div>`;
                 } else {
-                    div.innerHTML = `<div class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3 flex-shrink-0"><i class="fas fa-robot text-white"></i></div><div class="bg-white/80 backdrop-blur-sm rounded-2xl rounded-tl-none p-4 max-w-xs shadow-sm border border-gray-100"><p class="text-gray-800">${text}</p><div class="text-xs text-gray-400 mt-2">${time}</div></div>`;
+                    // bot message with avatar
+                    div.innerHTML = `
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center mr-3">
+                                <i class="fas fa-robot text-white"></i>
+                            </div>
+                            <div class="bg-white rounded-2xl p-4 max-w-xs">${text}</div>
+                        </div>
+                    `;
                 }
 
                 chatMessages.appendChild(div);
-                scrollToBottom();
+                scrollBottom();
             }
 
-            function sendUserMessage() {
-                if (!messageInput) return;
-                const txt = messageInput.value.trim();
-                if (!txt) return;
+            // send message logic
+            function sendMessage() {
+                const text = messageInput.value.trim();
+                if (text === "") return;
 
-                addMessage(txt, true);
-                messageInput.value = '';
+                // move the persistent bottom messages (welcome + options) into chat-messages if first real message
+                if (!firstMessageSent) {
+                    // bottomMessages contains welcome & options; move them to chatMessages
+                    while (bottomMessages.firstChild) {
+                        chatMessages.appendChild(bottomMessages.firstChild);
+                    }
+                    firstMessageSent = true;
+                }
 
-                typingIndicator.classList.remove('hidden');
-                scrollToBottom();
+                // add user message
+                addMessage(text, true);
+                messageInput.value = "";
 
+                // show typing
+                typingIndicator.classList.remove("hidden");
+                scrollBottom();
+
+                // simulate response after delay
                 setTimeout(() => {
-                    typingIndicator.classList.add('hidden');
-                    addMessage("Thank you. An officer will respond shortly. For urgent help, please call the consulate.", false);
-                }, 1400);
+                    typingIndicator.classList.add("hidden");
+                    addMessage("Thank you. An officer will respond shortly.", false);
+                }, 1200);
             }
 
-            sendBtn?.addEventListener('click', sendUserMessage);
-            messageInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendUserMessage(); });
+            sendBtn.onclick = sendMessage;
 
-            // Quick options
-            document.querySelectorAll('.quick-option-btn, .quick-suggestion-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const text = this.textContent.trim();
-                    messageInput.value = text;
-                    sendUserMessage();
+            messageInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") sendMessage();
+            });
+
+            // optional quick options (move bottom if needed & send prefilled)
+            document.querySelectorAll(".quick-option-btn").forEach(btn => {
+                btn.addEventListener("click", function () {
+                    const optionText = this.getAttribute("data-option") || this.innerText;
+                    messageInput.value = optionText;
+                    sendMessage();
                 });
             });
 
-            // Button placeholders
-            document.getElementById('emoji-btn')?.addEventListener('click', () => {
-                messageInput.value += ' 🇮🇳 ';
-                messageInput.focus();
+            // ensure that if the chat is opened and closed, the icon reverts
+            // (minimize already does that, but just to be safe)
+            window.addEventListener('click', (e) => {
+                // if someone clicks outside? not needed, but keep for safety
             });
 
-            document.getElementById('camera-btn')?.addEventListener('click', () => alert('📸 Camera would open'));
-            document.getElementById('attach-btn')?.addEventListener('click', () => alert('📎 File picker'));
-            document.getElementById('voice-btn')?.addEventListener('click', () => alert('🎤 Voice recording'));
-
-            // Notification badge
-            setTimeout(() => {
-                if (!isOpen) notification?.classList.remove('hidden');
-            }, 3000);
-
-            notification?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openChat();
-            });
-
-            // Handle orientation change
-            window.addEventListener('resize', () => {
-                if (isOpen) {
-                    setTimeout(scrollToBottom, 100);
-                }
-            });
+            // one tiny improvement: if chat gets closed by pressing minimize, icon is already reset.
+            // but if user toggles via the same button, class active-chat toggles in toggleChatPanel.
         })();
     </script>
+
 </body>
 
 </html>
