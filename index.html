@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Seva Setu · Lady Face Visible</title>
+    <title>Seva Setu - Mobile Responsive</title>
     <!-- Tailwind + Fonts + Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -41,7 +41,7 @@
             }
         }
 
-        /* Chatbot Container */
+        /* Chatbot Container - Base styles */
         .chatbot-container {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: fixed;
@@ -65,10 +65,10 @@
             max-height: 90vh;
         }
 
-        /* FIXED MOBILE VIEW - Ensures chat stays within screen */
+        /* MOBILE VIEW - FIXED RESPONSIVE DESIGN */
         @media (max-width: 768px) {
             .chatbot-container.active {
-                position: fixed;
+                position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
                 right: 0 !important;
@@ -88,65 +88,82 @@
                 border-radius: 0 !important;
                 height: 100vh !important;
                 width: 100vw !important;
-                max-height: 100vh !important;
-                display: flex;
-                flex-direction: column;
+                display: flex !important;
+                flex-direction: column !important;
                 overflow: hidden !important;
-                position: relative;
+                position: relative !important;
             }
 
-            /* Fixed header for mobile */
+            /* Fixed header */
             .mobile-header {
-                flex-shrink: 0;
+                flex: 0 0 auto !important;
                 width: 100%;
-                top: 0;
-                z-index: 20;
+                z-index: 30;
             }
 
-            /* Messages container with proper scrolling and safe area */
+            /* Messages container - FIXED SCROLLING */
             .messages-container {
                 flex: 1 1 auto !important;
                 overflow-y: auto !important;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 10px;
-                max-height: calc(100vh - 130px) !important; /* Adjust for header and input */
-                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch !important;
+                padding: 1rem !important;
+                height: auto !important;
+                max-height: none !important;
+                position: relative !important;
             }
 
-            /* Fixed input area at bottom */
-            .sticky-bottom-area {
-                flex-shrink: 0;
+            /* Ensure messages wrapper takes full width */
+            #chat-messages {
                 width: 100%;
-                position: relative;
-                bottom: 0;
-                z-index: 20;
+            }
+
+            /* Fixed input area */
+            .sticky-bottom-area {
+                flex: 0 0 auto !important;
+                width: 100%;
+                z-index: 30;
+                position: relative !important;
+                bottom: 0 !important;
             }
 
             .input-sticky-wrapper {
                 padding: 0.75rem 1rem;
                 padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-                background: rgba(255, 255, 255, 0.95);
+                background: rgba(255, 255, 255, 0.98);
+                border-top: 1px solid rgba(0, 0, 0, 0.1);
             }
 
-            /* Ensure lady image covers properly */
+            /* Lady image */
             .lady-background {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                width: 100%;
-                height: 100%;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
             }
 
             .lady-background img {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
+                object-position: center 20%;
+            }
+
+            /* Message bubbles */
+            .message-bot,
+            .message-user {
+                max-width: 100%;
+            }
+
+            .message-bot .bg-white\/80,
+            .advisory-card {
+                max-width: calc(100vw - 5rem);
             }
         }
 
-        /* ===== CHAT CONTAINER WITH LADY IMAGE - FULLY VISIBLE ===== */
+        /* Desktop styles */
         .chat-container {
             height: 100%;
             border-radius: 1.5rem;
@@ -159,7 +176,7 @@
             background-color: #f8f4f0;
         }
 
-        /* LADY IMAGE - ABSOLUTE POSITIONED TO SHOW FACE CLEARLY */
+        /* LADY IMAGE */
         .lady-background {
             position: absolute;
             top: 0;
@@ -178,7 +195,7 @@
             display: block;
         }
 
-        /* Semi-transparent gradient overlay - minimal, just to make text readable */
+        /* Gradient overlay */
         .lady-background::after {
             content: '';
             position: absolute;
@@ -192,29 +209,29 @@
             pointer-events: none;
         }
 
-        /* All content above background */
+        /* Content above background */
         .chat-container>*:not(.lady-background) {
             position: relative;
             z-index: 2;
         }
 
-        /* Header - solid orange with transparency */
+        /* Header */
         .mobile-header {
             background: linear-gradient(135deg, rgba(249, 115, 22, 0.95), rgba(251, 146, 60, 0.95)) !important;
             backdrop-filter: blur(2px);
             z-index: 5;
         }
 
-        /* Messages container - transparent to show lady */
+        /* Messages container */
         .messages-container {
             background-color: transparent !important;
             z-index: 2;
-            padding-top: 10px;
+            padding: 1rem;
             flex: 1;
             overflow-y: auto;
         }
 
-        /* Message bubbles - very transparent to see lady behind */
+        /* Message bubbles */
         .message-bot .bg-white,
         .advisory-card {
             background-color: rgba(255, 255, 255, 0.75) !important;
@@ -223,15 +240,13 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* User message bubbles */
         .message-user .bg-gradient-to-r {
             background: rgba(249, 115, 22, 0.85) !important;
             backdrop-filter: blur(4px);
         }
 
-        /* Input area - semi-transparent */
+        /* Input area */
         .sticky-bottom-area {
-            margin-top: auto;
             width: 100%;
             z-index: 10;
         }
@@ -251,7 +266,7 @@
             margin-bottom: 0.75rem;
         }
 
-        /* Scrollbar styling */
+        /* Scrollbar */
         .messages-container::-webkit-scrollbar {
             width: 4px;
         }
@@ -318,7 +333,7 @@
             transition: opacity 0.2s;
         }
 
-        /* Fix for iOS safe areas */
+        /* iOS safe areas */
         @supports (padding: max(0px)) {
             .input-sticky-wrapper {
                 padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
@@ -355,13 +370,13 @@
     <div id="chatbot-container" class="chatbot-container">
         <!-- Main Container -->
         <div class="chat-container">
-            <!-- LADY IMAGE - ABSOLUTE POSITIONED (100% VISIBLE) -->
+            <!-- LADY IMAGE -->
             <div class="lady-background">
                 <img src="./image/image1.png" alt="Lady Portrait"
                     style="width:100%; height:100%; object-fit:cover; object-position: center 20%;">
             </div>
 
-            <!-- Header (semi-transparent) -->
+            <!-- Header -->
             <div class="bg-gradient-to-r from-orange-500 to-orange-400 text-white mobile-header">
                 <div class="flex items-center justify-between p-4">
                     <div class="flex items-center flex-1 justify-center">
@@ -377,14 +392,15 @@
                 </div>
             </div>
 
-            <!-- Messages Area - Content starts from top, user can scroll -->
-            <div class="messages-container overflow-y-auto p-4" id="messages-scroll">
+            <!-- Messages Area -->
+            <div class="messages-container overflow-y-auto" id="messages-scroll">
                 <div class="space-y-4" id="chat-messages">
-                    <!-- Advisory Message (first message) -->
+                    <!-- Advisory Message -->
                     <div class="message-bot flex items-start advisory-message">
                         <div
                             class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3 flex-shrink-0 mt-1">
-                            <i class="fas fa-robot text-white"></i></div>
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
                         <div class="flex-1">
                             <div class="advisory-card">
                                 <div
@@ -421,7 +437,8 @@
                                         </div>
                                         <div
                                             class="assist-badge bg-orange-500 text-white px-4 py-2 rounded-full flex items-center gap-1">
-                                            <i class="fas fa-handshake"></i> Namaste</div>
+                                            <i class="fas fa-handshake"></i> Namaste
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -429,11 +446,12 @@
                         </div>
                     </div>
 
-                    <!-- Quick options (second message) -->
+                    <!-- Quick options -->
                     <div class="message-bot flex items-start">
                         <div
                             class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3 flex-shrink-0">
-                            <i class="fas fa-robot text-white"></i></div>
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
                         <div
                             class="bg-white/80 backdrop-blur-sm rounded-2xl rounded-tl-none p-4 max-w-xs shadow-sm border border-gray-100">
                             <p class="text-gray-800 mb-3">Ask me about:</p>
@@ -450,18 +468,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Extra message to demonstrate scrolling -->
-                    <div class="message-bot flex items-start">
-                        <div
-                            class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3 flex-shrink-0">
-                            <i class="fas fa-robot text-white"></i></div>
-                        <div
-                            class="bg-white/80 backdrop-blur-sm rounded-2xl rounded-tl-none p-4 max-w-xs shadow-sm border border-gray-100">
-                            <p class="text-gray-800">You can scroll up to see more messages. The lady's face remains
-                                visible in the background.</p>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Typing indicator -->
@@ -469,7 +475,8 @@
                     <div class="flex items-start">
                         <div
                             class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3">
-                            <i class="fas fa-robot text-white"></i></div>
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
                         <div class="bg-white/80 rounded-2xl rounded-tl-none p-4 shadow-sm border border-gray-100">
                             <div class="typing-indicator flex space-x-1"><span></span><span></span><span></span></div>
                             <p class="text-xs text-gray-500 mt-1">Assistant is typing...</p>
@@ -478,7 +485,7 @@
                 </div>
             </div>
 
-            <!-- STICKY BOTTOM BAR - Always at bottom -->
+            <!-- Bottom Input Area -->
             <div class="sticky-bottom-area w-full">
                 <div class="input-sticky-wrapper">
                     <!-- Quick suggestion chips -->
@@ -497,7 +504,7 @@
                     <!-- Input row -->
                     <div class="flex items-center gap-2">
                         <button id="voice-btn"
-                            class="bg-gradient-to-r from-orange-500 to-orange-400 text-white p-3 rounded-xl hover:from-orange-600 hover:to-orange-500 transition shadow-md"><i
+                            class="bg-gradient-to-r from-orange-500 to-orange-400 text-white p-3 rounded-xl hover:from-orange-600 hover:to-orange-500 transition shadow-md flex-shrink-0"><i
                                 class="fas fa-microphone"></i></button>
                         <div class="flex-1 relative">
                             <input type="text" id="message-input" placeholder="Ask about consulate services..."
@@ -513,7 +520,7 @@
                             </div>
                         </div>
                         <button id="send-btn"
-                            class="bg-gradient-to-r from-orange-500 to-orange-400 text-white p-3 rounded-xl hover:from-orange-600 hover:to-orange-500 transition shadow-md"><i
+                            class="bg-gradient-to-r from-orange-500 to-orange-400 text-white p-3 rounded-xl hover:from-orange-600 hover:to-orange-500 transition shadow-md flex-shrink-0"><i
                                 class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>
@@ -523,7 +530,6 @@
 
     <script>
         (function () {
-            // Toggle functionality
             const toggleChat = document.getElementById('toggle-chat');
             const chatbot = document.getElementById('chatbot-container');
             const minimize = document.getElementById('minimize-chat');
@@ -554,25 +560,21 @@
                 toggleChat.innerHTML = '<i class="fas fa-times text-2xl"></i>';
                 notification.classList.add('hidden');
                 messageInput?.focus();
-                // Prevent body scrolling when chat is open
                 document.body.style.overflow = 'hidden';
-                scrollToBottom();
+                setTimeout(scrollToBottom, 100);
             }
 
             function closeChat() {
                 chatbot.classList.remove('active');
                 isOpen = false;
                 toggleChat.innerHTML = '<i class="fas fa-comments text-2xl"></i>';
-                // Restore body scrolling
                 document.body.style.overflow = '';
             }
 
             function scrollToBottom() {
-                const container = document.querySelector('.messages-container');
+                const container = document.getElementById('messages-scroll');
                 if (container) {
-                    setTimeout(() => {
-                        container.scrollTop = container.scrollHeight;
-                    }, 100);
+                    container.scrollTop = container.scrollHeight;
                 }
             }
 
@@ -591,11 +593,13 @@
                 const div = document.createElement('div');
                 div.className = `flex items-start ${isUser ? 'justify-end message-user' : 'message-bot'}`;
                 const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
                 if (isUser) {
                     div.innerHTML = `<div class="bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-2xl rounded-tr-none p-4 max-w-xs shadow-md"><p>${text}</p><div class="text-xs text-orange-100 mt-2 text-right">${time}</div></div><div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center ml-3 flex-shrink-0"><i class="fas fa-user text-white"></i></div>`;
                 } else {
                     div.innerHTML = `<div class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3 flex-shrink-0"><i class="fas fa-robot text-white"></i></div><div class="bg-white/80 backdrop-blur-sm rounded-2xl rounded-tl-none p-4 max-w-xs shadow-sm border border-gray-100"><p class="text-gray-800">${text}</p><div class="text-xs text-gray-400 mt-2">${time}</div></div>`;
                 }
+                
                 chatMessages.appendChild(div);
                 scrollToBottom();
             }
@@ -604,10 +608,13 @@
                 if (!messageInput) return;
                 const txt = messageInput.value.trim();
                 if (!txt) return;
+                
                 addMessage(txt, true);
                 messageInput.value = '';
+                
                 typingIndicator.classList.remove('hidden');
                 scrollToBottom();
+                
                 setTimeout(() => {
                     typingIndicator.classList.add('hidden');
                     addMessage("Thank you. An officer will respond shortly. For urgent help, please call the consulate.", false);
@@ -618,21 +625,11 @@
             messageInput?.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendUserMessage(); });
 
             // Quick options
-            document.querySelectorAll('.quick-option-btn').forEach(btn => {
+            document.querySelectorAll('.quick-option-btn, .quick-suggestion-btn').forEach(btn => {
                 btn.addEventListener('click', function () {
-                    const opt = this.dataset.option;
-                    let msg = '';
-                    if (opt === 'visa') msg = 'Tell me about visa services';
-                    else if (opt === 'passport') msg = 'Passport renewal process';
-                    else if (opt === 'consulate') msg = 'Consulate contact details';
-                    if (msg) { messageInput.value = msg; sendUserMessage(); }
-                });
-            });
-
-            document.querySelectorAll('.quick-suggestion-btn').forEach(btn => {
-                btn.addEventListener('click', function () {
-                    const sug = this.dataset.suggestion;
-                    if (sug) { messageInput.value = sug; sendUserMessage(); }
+                    const text = this.textContent.trim();
+                    messageInput.value = text;
+                    sendUserMessage();
                 });
             });
 
@@ -641,6 +638,7 @@
                 messageInput.value += ' 🇮🇳 ';
                 messageInput.focus();
             });
+            
             document.getElementById('camera-btn')?.addEventListener('click', () => alert('📸 Camera would open'));
             document.getElementById('attach-btn')?.addEventListener('click', () => alert('📎 File picker'));
             document.getElementById('voice-btn')?.addEventListener('click', () => alert('🎤 Voice recording'));
@@ -649,12 +647,16 @@
             setTimeout(() => {
                 if (!isOpen) notification?.classList.remove('hidden');
             }, 3000);
-            notification?.addEventListener('click', (e) => { e.stopPropagation(); openChat(); });
+            
+            notification?.addEventListener('click', (e) => { 
+                e.stopPropagation(); 
+                openChat(); 
+            });
 
-            // Handle orientation change on mobile
+            // Handle orientation change
             window.addEventListener('resize', () => {
                 if (isOpen) {
-                    scrollToBottom();
+                    setTimeout(scrollToBottom, 100);
                 }
             });
         })();
