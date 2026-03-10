@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seva Setu · fixed toggle & inline icons</title>
+    <title>Seva Setu · full‑screen mobile</title>
 
     <!-- tailwind + font awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -67,7 +66,7 @@
             }
         }
 
-        /* chatbot container */
+        /* chatbot container — fullscreen on mobile, default on desktop */
         .chatbot-container {
             transition: .3s;
             position: fixed;
@@ -88,6 +87,33 @@
             transform: scale(1);
             visibility: visible;
             height: 90vh;
+        }
+
+        /* mobile full‑screen override */
+        @media (max-width: 640px) {
+            .chatbot-container {
+                bottom: 0;
+                right: 0;
+                max-width: 100%;
+                height: 0;
+                border-radius: 0;
+            }
+            .chatbot-container.active {
+                height: 100dvh;  /* use dynamic viewport height */
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
+            .chat-container {
+                border-radius: 0;
+                height: 100dvh;
+                max-height: 100dvh;
+            }
+            /* adjust inner padding if needed */
+            .mobile-header {
+                border-radius: 0;
+            }
         }
 
         /* main chat */
@@ -229,9 +255,15 @@
         .send-btn-container {
             flex-shrink: 0;
         }
+
+        /* tiny extra: ensure bottom bar is visible on mobile */
+        @media (max-width: 640px) {
+            .p-3.border-t.bg-white {
+                padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
-
 <body>
 
     <!-- FLOATING BUTTON : image by default, cross when active -->
@@ -457,17 +489,8 @@
                 });
             });
 
-            // ensure that if the chat is opened and closed, the icon reverts
-            // (minimize already does that, but just to be safe)
-            window.addEventListener('click', (e) => {
-                // if someone clicks outside? not needed, but keep for safety
-            });
-
-            // one tiny improvement: if chat gets closed by pressing minimize, icon is already reset.
-            // but if user toggles via the same button, class active-chat toggles in toggleChatPanel.
         })();
     </script>
 
 </body>
-
 </html>
