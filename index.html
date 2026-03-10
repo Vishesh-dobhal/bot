@@ -20,6 +20,7 @@
         body {
             background: #ffffff;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Chat Icon Animation */
@@ -64,15 +65,84 @@
             max-height: 90vh;
         }
 
+        /* FIXED MOBILE VIEW - Ensures chat stays within screen */
         @media (max-width: 768px) {
             .chatbot-container.active {
+                position: fixed;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                width: 100vw !important;
                 height: 100vh !important;
+                max-width: 100vw !important;
                 max-height: 100vh !important;
-                max-width: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                border-radius: 0 !important;
+                background-color: transparent;
+                overflow: hidden !important;
+            }
+
+            .chat-container {
+                border-radius: 0 !important;
+                height: 100vh !important;
+                width: 100vw !important;
+                max-height: 100vh !important;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden !important;
+                position: relative;
+            }
+
+            /* Fixed header for mobile */
+            .mobile-header {
+                flex-shrink: 0;
+                width: 100%;
+                top: 0;
+                z-index: 20;
+            }
+
+            /* Messages container with proper scrolling and safe area */
+            .messages-container {
+                flex: 1 1 auto !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 10px;
+                max-height: calc(100vh - 130px) !important; /* Adjust for header and input */
+                scroll-behavior: smooth;
+            }
+
+            /* Fixed input area at bottom */
+            .sticky-bottom-area {
+                flex-shrink: 0;
+                width: 100%;
+                position: relative;
                 bottom: 0;
-                right: 0;
+                z-index: 20;
+            }
+
+            .input-sticky-wrapper {
+                padding: 0.75rem 1rem;
+                padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+                background: rgba(255, 255, 255, 0.95);
+            }
+
+            /* Ensure lady image covers properly */
+            .lady-background {
+                position: absolute;
                 top: 0;
                 left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            .lady-background img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
         }
 
@@ -87,7 +157,6 @@
             flex-direction: column;
             position: relative;
             background-color: #f8f4f0;
-            /* Warm fallback */
         }
 
         /* LADY IMAGE - ABSOLUTE POSITIONED TO SHOW FACE CLEARLY */
@@ -106,7 +175,6 @@
             height: 100%;
             object-fit: cover;
             object-position: center 15%;
-            /* FACE POSITIONED HIGHER - adjust this value */
             display: block;
         }
 
@@ -142,7 +210,8 @@
             background-color: transparent !important;
             z-index: 2;
             padding-top: 10px;
-            /* Content starts from top, but user can scroll */
+            flex: 1;
+            overflow-y: auto;
         }
 
         /* Message bubbles - very transparent to see lady behind */
@@ -249,10 +318,10 @@
             transition: opacity 0.2s;
         }
 
-        /* Make sure lady's face is in the upper half */
-        @media (max-width: 768px) {
-            .chat-container {
-                border-radius: 0;
+        /* Fix for iOS safe areas */
+        @supports (padding: max(0px)) {
+            .input-sticky-wrapper {
+                padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
             }
         }
     </style>
@@ -288,18 +357,8 @@
         <div class="chat-container">
             <!-- LADY IMAGE - ABSOLUTE POSITIONED (100% VISIBLE) -->
             <div class="lady-background">
-                <!-- 
-                    IMPORTANT: REPLACE THIS IMAGE PATH WITH YOUR LOCAL LADY IMAGE
-                    ==============================================================
-                    OPTIONS:
-                    - Same folder: src="image1.png"
-                    - In image folder: src="./image/image1.png" 
-                    - Full Android path: src="file:///storage/emulated/0/Download/lady.jpg"
-                    - Full Windows path: src="file:///C:/Users/YourName/Pictures/lady.jpg"
-                -->
                 <img src="./image/image1.png" alt="Lady Portrait"
                     style="width:100%; height:100%; object-fit:cover; object-position: center 20%;">
-                <!-- object-position: center 20% means face is in upper part - ADJUST THIS VALUE -->
             </div>
 
             <!-- Header (semi-transparent) -->
@@ -321,7 +380,7 @@
             <!-- Messages Area - Content starts from top, user can scroll -->
             <div class="messages-container overflow-y-auto p-4" id="messages-scroll">
                 <div class="space-y-4" id="chat-messages">
-                    <!-- Advisory Message (first message - appears at top, user scrolls down to see more) -->
+                    <!-- Advisory Message (first message) -->
                     <div class="message-bot flex items-start advisory-message">
                         <div
                             class="w-10 h-10 rounded-full bg-gradient-to-r from-orange-500 to-orange-400 flex items-center justify-center mr-3 flex-shrink-0 mt-1">
@@ -364,7 +423,6 @@
                                             class="assist-badge bg-orange-500 text-white px-4 py-2 rounded-full flex items-center gap-1">
                                             <i class="fas fa-handshake"></i> Namaste</div>
                                     </div>
-                                    <!-- The entire official-footer section has been removed as requested -->
                                 </div>
                             </div>
                             <div class="text-xs text-gray-400 mt-1 ml-1">Just now</div>
@@ -496,6 +554,8 @@
                 toggleChat.innerHTML = '<i class="fas fa-times text-2xl"></i>';
                 notification.classList.add('hidden');
                 messageInput?.focus();
+                // Prevent body scrolling when chat is open
+                document.body.style.overflow = 'hidden';
                 scrollToBottom();
             }
 
@@ -503,11 +563,17 @@
                 chatbot.classList.remove('active');
                 isOpen = false;
                 toggleChat.innerHTML = '<i class="fas fa-comments text-2xl"></i>';
+                // Restore body scrolling
+                document.body.style.overflow = '';
             }
 
             function scrollToBottom() {
                 const container = document.querySelector('.messages-container');
-                if (container) setTimeout(() => container.scrollTop = container.scrollHeight, 50);
+                if (container) {
+                    setTimeout(() => {
+                        container.scrollTop = container.scrollHeight;
+                    }, 100);
+                }
             }
 
             toggleChat?.addEventListener('click', (e) => {
@@ -584,6 +650,13 @@
                 if (!isOpen) notification?.classList.remove('hidden');
             }, 3000);
             notification?.addEventListener('click', (e) => { e.stopPropagation(); openChat(); });
+
+            // Handle orientation change on mobile
+            window.addEventListener('resize', () => {
+                if (isOpen) {
+                    scrollToBottom();
+                }
+            });
         })();
     </script>
 </body>
