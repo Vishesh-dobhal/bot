@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seva Setu · full‑screen mobile</title>
+    <title>Seva Setu · mobile hide FAB</title>
 
     <!-- tailwind + font awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +20,7 @@
         .floating-icon {
             animation: float 3s ease-in-out infinite;
             box-shadow: 0 10px 25px rgba(249, 115, 22, .4);
-            transition: background 0.2s, border-color 0.2s;
+            transition: background 0.2s, border-color 0.2s, opacity 0.2s, visibility 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -98,21 +98,32 @@
                 height: 0;
                 border-radius: 0;
             }
+
             .chatbot-container.active {
-                height: 100dvh;  /* use dynamic viewport height */
+                height: 100dvh;
                 top: 0;
                 left: 0;
                 bottom: 0;
                 right: 0;
             }
+
             .chat-container {
                 border-radius: 0;
                 height: 100dvh;
                 max-height: 100dvh;
             }
-            /* adjust inner padding if needed */
+
             .mobile-header {
                 border-radius: 0;
+            }
+
+            /* hide floating button when chat is active on mobile */
+            .chatbot-container.active ~ .fixed.bottom-6.right-6.z-50,
+            .chatbot-container.active + * .fixed.bottom-6.right-6.z-50,
+            body:has(.chatbot-container.active) .fixed.bottom-6.right-6.z-50 {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
             }
         }
 
@@ -251,12 +262,12 @@
             color: #f97316;
         }
 
-        /* send button stays outside, but visually attached */
+        /* send button stays outside */
         .send-btn-container {
             flex-shrink: 0;
         }
 
-        /* tiny extra: ensure bottom bar is visible on mobile */
+        /* bottom safe area */
         @media (max-width: 640px) {
             .p-3.border-t.bg-white {
                 padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
@@ -402,6 +413,8 @@
                 isOpen = !isOpen;
                 chatbot.classList.toggle("active", isOpen);
                 toggleChat.classList.toggle("active-chat", isOpen); // controls image/cross
+
+                // When chat closes on mobile, FAB becomes visible again automatically because active class removed.
             }
 
             toggleChat.onclick = (e) => {
