@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seva Setu · with user profile icon</title>
+    <title>Seva Setu · same image for chatbot icon</title>
 
     <!-- tailwind + font awesome -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -46,7 +46,6 @@
             display: none;
         }
 
-        /* when chat is active, hide image and show cross */
         .floating-icon.active-chat .btn-image {
             display: none;
         }
@@ -274,6 +273,27 @@
                 padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
             }
         }
+
+        /* --- fade effect for ALL messages - 3 messages keep, baaki fade --- */
+        .chat-message {
+            transition: opacity 0.8s ease-out;
+        }
+
+        .chat-message.fade-out {
+            opacity: 0;
+        }
+
+        .chat-message.removed {
+            display: none !important;
+        }
+
+        /* profile images ke liye style */
+        .profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
     </style>
 </head>
 
@@ -283,7 +303,7 @@
     <div class="fixed bottom-6 right-6 z-50">
         <button id="toggle-chat"
             class="floating-icon w-16 h-16 rounded-full overflow-hidden border-4 border-orange-500 flex items-center justify-center bg-white">
-            <img src="./image1.png" class="btn-image w-full h-full object-cover">
+            <img src="./image/image1.png" class="btn-image w-full h-full object-cover">
             <i class="fas fa-times btn-cross text-4xl"></i>
         </button>
     </div>
@@ -292,15 +312,16 @@
     <div id="chatbot-container" class="chatbot-container">
         <div class="chat-container">
             <div class="lady-background">
-                <img src="./image1.png" alt="">
+                <img src="./image/image1.png" alt="">
             </div>
 
             <!-- HEADER -->
             <div class="mobile-header text-white">
                 <div class="flex items-center justify-between p-4">
                     <div class="flex items-center">
-                        <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-robot"></i>
+                        <!-- header mein bhi wahi image -->
+                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white mr-3">
+                            <img src="./image/image1.png" class="profile-img">
                         </div>
                         <div>
                             <h2 class="font-bold">Seva Setu Assistant</h2>
@@ -317,38 +338,23 @@
             <div class="messages-container" id="messages-scroll">
                 <div id="chat-messages" class="space-y-4"></div>
                 <div id="bottom-messages" class="space-y-4">
-                    <!-- welcome bot -->
-                    <div class="message-bot flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center mr-3">
-                            <i class="fas fa-robot text-white"></i>
+                    <!-- welcome bot - ab image use karega -->
+                    <div class="chat-message message-bot flex items-start">
+                        <div
+                            class="w-10 h-10 rounded-full overflow-hidden border-2 border-orange-500 mr-3 flex-shrink-0">
+                            <img src="./image/image1.png" class="profile-img">
                         </div>
                         <div class="bg-white rounded-2xl p-4 max-w-xs">
                             <p>Welcome! How can I assist you today?</p>
                         </div>
                     </div>
-                    <!-- quick options -->
-                    <div class="message-bot flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center mr-3">
-                            <i class="fas fa-robot text-white"></i>
-                        </div>
-                        <div class="bg-white rounded-2xl p-4 max-w-xs">
-                            <p class="mb-2">Ask me about:</p>
-                            <div class="flex gap-2 flex-wrap">
-                                <button class="quick-option-btn px-3 py-1 bg-orange-100 rounded"
-                                    data-option="Visa Services">Visa Services</button>
-                                <button class="quick-option-btn px-3 py-1 bg-orange-100 rounded"
-                                    data-option="Passport">Passport</button>
-                                <button class="quick-option-btn px-3 py-1 bg-orange-100 rounded"
-                                    data-option="Consulate Help">Consulate Help</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-                <!-- typing indicator -->
+                <!-- typing indicator - ab image use karega -->
                 <div id="typing-indicator" class="hidden mt-4">
                     <div class="flex items-start">
-                        <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center mr-3">
-                            <i class="fas fa-robot text-white"></i>
+                        <div
+                            class="w-10 h-10 rounded-full overflow-hidden border-2 border-orange-500 mr-3 flex-shrink-0">
+                            <img src="./image/image1.png" class="profile-img">
                         </div>
                         <div class="bg-white p-4 rounded-xl">
                             <div class="typing-indicator flex space-x-1">
@@ -393,7 +399,7 @@
             const typingIndicator = document.getElementById("typing-indicator");
             const bottomMessages = document.getElementById("bottom-messages");
 
-            // camera/attach/audio buttons — just demo alerts
+            // camera/attach/audio buttons — bas alerts
             document.getElementById("camera-btn")?.addEventListener("click", (e) => {
                 e.preventDefault();
                 alert("📸 Camera opened (simulated)");
@@ -408,7 +414,7 @@
             });
 
             let isOpen = false;
-            let firstMessageSent = false;  // tracks if we moved bottom messages
+            let firstMessageSent = false;
 
             // toggle chat + switch icon image/cross
             function toggleChatPanel() {
@@ -434,17 +440,53 @@
                 scroll.scrollTop = scroll.scrollHeight;
             }
 
-            // add message (user = true for outgoing)
+            // --- SAB MESSAGES FADE HONGE - 3 MESSAGES KEEP HONGE ---
+            function fadeOldMessages() {
+                // saare messages lo jo direct #chat-messages ke andar hain (class chat-message wale)
+                const allMessages = Array.from(document.querySelectorAll('#chat-messages > .chat-message'));
+
+                // 3 se zyada messages hain to purane fade karo (3 messages rehne do)
+                if (allMessages.length > 3) {
+                    // sabse purane messages (first n-3)
+                    const messagesToFade = allMessages.slice(0, allMessages.length - 3);
+
+                    messagesToFade.forEach(msg => {
+                        // agar already fade ho raha hai ya remove ho chuka hai to skip
+                        if (msg.classList.contains('fade-out') || msg.classList.contains('removed')) return;
+
+                        // fade-out class add karo - isse opacity 0 ho jayegi
+                        msg.classList.add('fade-out');
+
+                        // transition end hone ke baad display: none kar do
+                        const onFadeEnd = function (e) {
+                            if (e.propertyName === 'opacity') {
+                                msg.classList.add('removed');
+                                msg.removeEventListener('transitionend', onFadeEnd);
+                            }
+                        };
+                        msg.addEventListener('transitionend', onFadeEnd, { once: true });
+
+                        // backup timer agar transitionend fire na ho
+                        setTimeout(() => {
+                            if (msg.classList.contains('fade-out') && !msg.classList.contains('removed')) {
+                                msg.classList.add('removed');
+                            }
+                        }, 1000);
+                    });
+                }
+            }
+
+            // message add karne ka function - ab image ke saath
             function addMessage(text, user) {
-                const div = document.createElement("div");
-                div.className = `flex items-start ${user ? 'justify-end' : ''}`;
+                const messageWrapper = document.createElement("div");
 
                 if (user) {
-                    // user message bubble with ORANGE profile icon on the right
-                    div.innerHTML = `
+                    // user message - right side, orange background, user icon (i class="fas fa-user")
+                    messageWrapper.className = 'chat-message message-user';
+                    messageWrapper.innerHTML = `
                         <div class="flex items-start flex-row-reverse">
                             <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center ml-3 flex-shrink-0">
-                                <i class="fas fa-user text-white"></i>
+                                <i class="fas fa-user text-white text-xl"></i>
                             </div>
                             <div class="bg-orange-500 text-white rounded-2xl p-4 max-w-xs">
                                 ${text}
@@ -452,11 +494,12 @@
                         </div>
                     `;
                 } else {
-                    // bot message with avatar (left side)
-                    div.innerHTML = `
+                    // bot message - left side, white background, image profile
+                    messageWrapper.className = 'chat-message message-bot';
+                    messageWrapper.innerHTML = `
                         <div class="flex items-start">
-                            <div class="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center mr-3 flex-shrink-0">
-                                <i class="fas fa-robot text-white"></i>
+                            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-orange-500 mr-3 flex-shrink-0">
+                                <img src="./image/image1.png" class="profile-img">
                             </div>
                             <div class="bg-white rounded-2xl p-4 max-w-xs">
                                 ${text}
@@ -465,7 +508,7 @@
                     `;
                 }
 
-                chatMessages.appendChild(div);
+                chatMessages.appendChild(messageWrapper);
                 scrollBottom();
             }
 
@@ -474,26 +517,37 @@
                 const text = messageInput.value.trim();
                 if (text === "") return;
 
-                // move the persistent bottom messages (welcome + options) into chat-messages if first real message
+                // pehla message bheja to bottom messages ko main chat me move karo
                 if (!firstMessageSent) {
                     while (bottomMessages.firstChild) {
-                        chatMessages.appendChild(bottomMessages.firstChild);
+                        const node = bottomMessages.firstChild;
+                        chatMessages.appendChild(node);
                     }
                     firstMessageSent = true;
                 }
 
-                // add user message
+                // user message add karo
                 addMessage(text, true);
                 messageInput.value = "";
 
-                // show typing
+                // naya message add karne ke baad purane messages fade karo
+                setTimeout(() => {
+                    fadeOldMessages();
+                }, 20);
+
+                // typing indicator dikhao
                 typingIndicator.classList.remove("hidden");
                 scrollBottom();
 
-                // simulate response after delay
+                // bot ka reply
                 setTimeout(() => {
                     typingIndicator.classList.add("hidden");
                     addMessage("Thank you. An officer will respond shortly.", false);
+
+                    // bot reply ke baad bhi fade karo
+                    setTimeout(() => {
+                        fadeOldMessages();
+                    }, 20);
                 }, 1200);
             }
 
@@ -503,19 +557,9 @@
                 if (e.key === "Enter") sendMessage();
             });
 
-            // quick options
-            document.querySelectorAll(".quick-option-btn").forEach(btn => {
-                btn.addEventListener("click", function () {
-                    const optionText = this.getAttribute("data-option") || this.innerText;
-                    messageInput.value = optionText;
-                    sendMessage();
-                });
-            });
-
         })();
     </script>
 
 </body>
 
 </html>
-
